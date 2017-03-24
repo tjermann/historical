@@ -1,6 +1,8 @@
-# historical
+# Historical Data
 
-#NFL Documentation
+
+
+NFL Documentation
 
 NFL Rosters are composed of the following: 
 QB Quarterback
@@ -50,7 +52,11 @@ Interceptions = 2pts 0 points allowed = 10pts
 35+ points allowed = -4pts
 Shutout bonus = 5pts
 
-#NBA Documentation
+
+
+
+
+NBA Documentation
 
 NBA Roster are composed of the following:
 G Guard
@@ -76,7 +82,12 @@ Turnover = -.5pt (negative)
 Double Double = 2
 Triple Double = 3
 
-#MLB Documentation
+
+
+
+
+
+MLB Documentation
 
 MLB Rosters are composed of the following:
 P Pitcher
@@ -115,7 +126,12 @@ Stolen Bases = 7.5
 Caught Stealing= -3
 Strike Outs = -0.50
 
-#NHL Documentation
+
+
+
+
+
+NHL Documentation
 
 NHL Rosters are composed of the following:
 LW Left Wing
@@ -143,7 +159,12 @@ Save = 0.6 PTS
 Goal Against = -3 PTS
 Shutout Bonus = 6 PTS
 
-#NCAAB Documentation
+
+
+
+
+
+NCAAB Documentation
 
 NCAAB Rosters are composed of the following:
 G Guard
@@ -170,7 +191,13 @@ Turnover = -1pt (negative)
 Double Double = 2
 Triple Double = 3
 
-#NCAAF Documentation
+
+
+
+
+
+
+NCAAF Documentation
 
 NCAAF Rosters are composed of the following:
 QB Quarterback
