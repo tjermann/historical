@@ -89,6 +89,8 @@ Triple Double = 3
 
 MLB Documentation
 
+For modeling purposes, Pitcher positions should include SP only, RP should not be included.  DH/RF/CF/LF should all be mapped to OF. RP/PH/NA should not be considered into lineups.
+
 MLB Rosters are composed of the following:
 P Pitcher
 C Catcher
