@@ -151,7 +151,7 @@ Goal = 9 PTS
 Assist = 6 PTS
 Shot on Goal = 1.5 PTS
 Blocked Shot = 1.5 PTS
-Short Handed Point Bonus (Goal/Assist) = 3 PTS
+Short Handed Goal Bonus = 3 PTS
 
 Goalies
 Win = 9 PTS
