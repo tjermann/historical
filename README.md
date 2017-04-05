@@ -136,14 +136,14 @@ Strike Outs = -0.50
 NHL Documentation
 
 NHL Rosters are composed of the following:
-LW Left Wing
-LW Left Wing
-RW Right Wing
-RW Right Wing
+W Wing
+W Wing
+W Wing
 C Center
 C Center
 D Defense
 D Defense
+Util Utility (W/C/D)
 G Goalie
 
 Scoring system is as follows:
@@ -172,11 +172,11 @@ NCAAB Rosters are composed of the following:
 G Guard
 G Guard
 G Guard
+G Guard
 F Forward
 F Forward
 F Forward
-UTIL Utility(G/F/C)
-UTIL Utility(G/F/C)
+F Forward
 UTIL Utility(G/F/C)
 
 Scoring system is as follows:
