@@ -10,7 +10,7 @@ from random import randint
 import csv
 
 #Number of lineups per active day of EPL games (at least 5 games being played)
-num_lineups = 1000
+num_lineups = 10
 
 Position_DICT = {'G': 'G',
                  'CD-R': 'D',
@@ -36,6 +36,7 @@ Position_DICT = {'G': 'G',
                  'LF': 'F',
                  'RF': 'F',
                  'Sub': 'S',
+                 'S': 'S',
                  'SW': 'D'}
 
 Boxscores_DATA = 'boxscores/epl_players.csv'
@@ -71,17 +72,15 @@ def main():
     midfielders = midfielders[int(0.25*len(midfielders)):]
     defenders = games[games.Position == 'D'].sort('Fantasy_Points')
     defenders = defenders[int(0.25*len(defenders)):]
-    utilities = games[games.Position != 'G'].sort('Fantasy_Points')
-    utilities = utilities[int(0.25*len(utilities)):]
     
 
     dates = games['Date'].unique()
+    dates.sort()
     for date in dates:
         gameids = games[games.Date == date]['GameID'].unique()
         if len(gameids) >5:
             for j in range(0, num_lineups):
 
-                date_utilities = utilities[utilities.Date == date].reset_index()
                 date_goalies = goalies[goalies.Date == date].reset_index()
                 date_forwards = forwards[forwards.Date == date].reset_index()
                 date_midfielders = midfielders[midfielders.Date == date].reset_index()
@@ -90,29 +89,27 @@ def main():
                 a = randint(0, len(date_forwards)-1)
                 f1_points = date_forwards['Fantasy_Points'][a]
                 date_forwards = date_forwards[date_forwards.index != a].reset_index().drop('level_0', axis = 1)
-                date_utilities = date_utilities[date_utilities.index != a].reset_index().drop('level_0', axis = 1)
 
                 b = randint(0, len(date_forwards)-1)
                 f2_points = date_forwards['Fantasy_Points'][b]
-                date_utilities = date_utilities[date_utilities.index != b].reset_index().drop('level_0', axis = 1)
+                date_forwards = date_forwards[date_forwards.index != b].reset_index().drop('level_0', axis = 1)
 
                 c = randint(0, len(date_midfielders)-1)
                 m1_points = date_midfielders['Fantasy_Points'][c]
                 date_midfielders = date_midfielders[date_midfielders.index != c].reset_index().drop('level_0', axis = 1)
-                date_utilities = date_utilities[date_utilities.index != c].reset_index().drop('level_0', axis = 1)
 
                 d = randint(0, len(date_midfielders)-1)
                 m2_points = date_midfielders['Fantasy_Points'][d]
-                date_utilities = date_utilities[date_utilities.index != d].reset_index().drop('level_0', axis = 1)
+                date_midfielders = date_midfielders[date_midfielders.index != d].reset_index().drop('level_0', axis = 1)
 
                 e = randint(0, len(date_defenders)-1)
                 d1_points = date_defenders['Fantasy_Points'][e]
                 date_defenders = date_defenders[date_defenders.index != e].reset_index().drop('level_0', axis = 1)
-                date_utilities = date_utilities[date_utilities.index != e].reset_index().drop('level_0', axis = 1)
 
                 f = randint(0, len(date_defenders)-1)
                 d2_points = date_defenders['Fantasy_Points'][f]
-                date_utilitiess = date_utilities[date_utilities.index != f].reset_index().drop('level_0', axis = 1)
+                date_defenders = date_defenders[date_defenders.index != f].reset_index().drop('level_0', axis = 1)
+                date_utilities = date_forwards.append(date_midfielders).append(date_defenders).reset_index().drop('level_0', axis= 1)
 
 
                 g = randint(0, len(date_utilities)-1)
