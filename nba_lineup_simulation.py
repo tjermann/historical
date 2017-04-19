@@ -36,9 +36,9 @@ def main():
     games = games[games_fields]
     games = games[games.Fantasy_Points > 0]
 
-    guards = games[games.Position == 'G'].sort('Fantasy_Points')
+    guards = games[games.Position.isin(['G','SG','PG'])].sort('Fantasy_Points')
     guards = guards[int(0.25*len(guards)):]
-    forwards = games[games.Position == 'F'].sort('Fantasy_Points')
+    forwards = games[games.Position.isin(['F','SF','PF'])].sort('Fantasy_Points')
     forwards = forwards[int(0.25*len(forwards)):] 
     centers = games[games.Position =='C'].sort('Fantasy_Points')
     centers = centers[int(0.25*len(centers)):]

@@ -33,8 +33,8 @@ def main():
     games = games[games_fields]
     games = games[games.Fantasy_Points > 0].sort('Fantasy_Points')
 
-    guards = games[games.Position == 'G'].sort('Fantasy_Points')
-    forwards = games[games.Position == 'F'].sort('Fantasy_Points')
+    guards = games[games.Position.isin(['G','SG','PG'])].sort('Fantasy_Points')
+    forwards = games[games.Position.isin(['F','PF','SF'])].sort('Fantasy_Points')
     centers = games[games.Position =='C'].sort('Fantasy_Points')
     
     dates = games['Date'].unique()
