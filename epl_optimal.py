@@ -8,8 +8,12 @@ import pdb
 import datetime
 from random import randint
 import csv
+import Universal_Optimizer as uo
+from collections import defaultdict
 
 Boxscores_DATA = 'boxscores/epl_players.csv'
+
+POSITIONS = ['F1','F2','M1','M2','D1','D2','U1','U2','G']
 
 Position_DICT = {'G': 'G',
                  'CD-R': 'D',
@@ -36,79 +40,66 @@ Position_DICT = {'G': 'G',
                  'RF': 'F',
                  'Sub': 'S',
                  'S': 'S',
-                 'SW': 'D'}
+                 'SW': 'S'}
+
+Position_DICT = defaultdict(lambda: 'S', Position_DICT)
 
 csvfile = open('optimals/epl_optimal_lineups.csv', 'w')
-fieldnames = ['Date','F1','F2','M1','M2','D1','D2','U1','U2','G','Total']
+fieldnames = ['Date','Player_ID_F1','Player_ID_F2','Player_ID_M1','Player_ID_M2','Player_ID_D1','Player_ID_D2','Player_ID_U1','Player_ID_U2','Player_ID_G','Dollars','Points']
 writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
 writer.writeheader()
 
 def main():
+    CURR_DATE = datetime.datetime.now() + datetime.timedelta(hours=-4) + datetime.timedelta(minutes=5)
+    time = CURR_DATE.strftime('%H:%M')
+
     games = pandas.read_csv(Boxscores_DATA)
 
     position_map = lambda position: Position_DICT[position]
 
     games['Position'] = games['Position'].map(position_map)
+    games['Points'] = games['Fantasy_Points']
+    games['Dollars'] = games['Salary']
 
-    games_fields = ['Date',
-                    'GameID',
-                    'PlayerName',
+    games_fields = ['PlayerID',
+                    'Date',
                     'Position',
-                    'Fantasy_Points']
+                    'Points',
+                    'Dollars']
     games = games[games_fields]
-    games = games[games.Fantasy_Points > 0].sort('Fantasy_Points')
-
-    forwards = games[games.Position == 'F'].sort('Fantasy_Points')
-    midfielders = games[games.Position == 'M'].sort('Fantasy_Points')
-    defenders = games[games.Position == 'D'].sort('Fantasy_Points')
-    goalies = games[games.Position == 'G'].sort('Fantasy_Points')
+    games = games[games.Points > 0].sort('Points')
 
     dates = games['Date'].unique()
     dates.sort()
     for i in range(0,len(dates)):
-        #Contest will only be run on Single Days when there are 5 or more games available.
         date = dates[i]
-        gameids = games[games.Date == date]['GameID'].unique()
+        results_df = games[games.Date == date][['PlayerID','Position','Points','Dollars']]
 
-        try:
+        optimizer = uo.LineupOptimizer(results_df,
+                                       POSITIONS,
+                                       50000,
+                                       40000,
+                                       1,
+                                       CURR_DATE.year,
+                                       CURR_DATE.month,
+                                       CURR_DATE.day)
 
-            date_forwards = forwards[forwards.Date == date].sort('Fantasy_Points', ascending=False).reset_index()
-            date_defenders = defenders[defenders.Date == date].sort('Fantasy_Points', ascending=False).reset_index()
-            date_midfielders = midfielders[midfielders.Date == date].sort('Fantasy_Points', ascending=False).reset_index()
-            date_goalies = goalies[goalies.Date == date].sort('Fantasy_Points', ascending=False).reset_index()
-            date_utilities = [date_forwards['Fantasy_Points'][2], date_forwards['Fantasy_Points'][3],  date_defenders['Fantasy_Points'][2], date_defenders['Fantasy_Points'][3], date_midfielders['Fantasy_Points'][2], date_midfielders['Fantasy_Points'][3]]
-            date_utilities.sort(reverse=True)
-        
-
-            f1_points = round(date_forwards['Fantasy_Points'][0],1)
-            f2_points = round(date_forwards['Fantasy_Points'][1],1)
-            m1_points = round(date_midfielders['Fantasy_Points'][0],1)
-            m2_points = round(date_midfielders['Fantasy_Points'][1],1)
-            d1_points = round(date_defenders['Fantasy_Points'][0],1)
-            d2_points = round(date_defenders['Fantasy_Points'][1],1)
-            u1_points = round(date_utilities[0],1)
-            u2_points = round(date_utilities[1],1)
-            g_points = round(date_goalies['Fantasy_Points'][0],1)
- 
-            lineup_points = round(f1_points + f2_points+ m1_points + m2_points + d1_points + d2_points + u1_points + u2_points + g_points,1)
-
+        lineup = optimizer.calc_lineup()
+        if len(lineup) > 0:
+            lineup['Date'] = date
             data = {'Date': date,
-                    'F1': f1_points,
-                    'F2': f2_points,
-                    'M1': m1_points,
-                    'M2': m2_points,
-                    'D1': d1_points,
-                    'D2': d2_points,
-                    'U1': u1_points,
-                    'U2': u2_points,
-                    'G': g_points,
-                    'Total': lineup_points}
-
-            if len(gameids) >= 5:
-                writer.writerow(data)
-
-        except Exception:
-            continue
+                    'Player_ID_F1': lineup.values[0][0],
+                    'Player_ID_F2': lineup.values[0][1],
+                    'Player_ID_M1': lineup.values[0][4],
+                    'Player_ID_M2': lineup.values[0][5],
+                    'Player_ID_D1': lineup.values[0][6],
+                    'Player_ID_D2': lineup.values[0][7],
+                    'Player_ID_U1': lineup.values[0][8],
+                    'Player_ID_U2': lineup.values[0][9],
+                    'Player_ID_G': lineup.values[0][10],
+                    'Dollars': lineup.values[0][2],
+                    'Points': lineup.values[0][3]}
+            writer.writerow(data)
 
 
 if __name__ == "__main__":

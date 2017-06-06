@@ -10,7 +10,7 @@ from random import randint
 import csv
 
 #Number of lineups per active day of EPL games (at least 5 games being played)
-num_lineups = 10
+num_lineups = 1000
 
 Position_DICT = {'G': 'G',
                  'CD-R': 'D',
